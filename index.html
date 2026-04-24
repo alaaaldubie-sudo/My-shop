@@ -881,6 +881,10 @@ window.submitOrder = async function() {
   try {
     const total = cart.reduce((s, x) => s + x.price * x.qty, 0);
     const orderNum = 'ORD-' + Date.now();
+    // إرسال إشعار واتساب (اختياري)
+    const whatsappMsg = `🛍️ طلب جديد من ${customerName}%0A📞 ${customerPhone}%0A📍 ${customerAddress}%0A💰 المجموع: ${total}$%0A📦 المنتجات: ${cart.map(i => i.name + ' × ' + i.quantity).join(' - ')}`;
+// فتح واتساب (لن يرسل تلقائياً - يفتح المحادثة)
+// window.open(`https://wa.me/966500000000?text=${whatsappMsg}`, '_blank');
     await addDoc(collection(db, 'orders'), {
       orderNumber: orderNum,
       customerName: name,
