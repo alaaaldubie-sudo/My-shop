@@ -917,17 +917,15 @@ window.submitOrder = async function() {
     await addDoc(collection(db, 'orders'), orderData);
     
     // إرسال إشعار إيميل (EmailJS)
-    try {
-      await emailjs.send("service_Wow1234", "template_j9liinu", {
-        to_email: "alaa.aldubie@gmail.com",
-        order_number: orderNumber,
-        customer_name: name,
-        customer_phone: phone,
-        customer_address: address,
-        order_total: total.toFixed(2),
-        order_items: cart.map(i => `${i.name} (×${i.qty})`).join(", "),
-        order_date: new Date().toLocaleString('ar-SA')
-      });
+   await emailjs.send("service_Wow1234", "template_j9liinu", {
+  to_email: "alaa.aldubie@gmail.com",
+  from_name: name,
+  customer_phone: phone,
+  customer_address: address,
+  order_total: total.toFixed(2),
+  order_products: cart.map(i => `${i.name} (×${i.qty})`).join(", "),
+  order_date: new Date().toLocaleString('ar-SA')
+});
       console.log("Email sent successfully");
     } catch(emailErr) {
       console.log("Email error (non-critical):", emailErr);
