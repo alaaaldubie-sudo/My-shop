@@ -912,12 +912,10 @@ window.submitOrder = async function() {
       status: 'جديد',
       createdAt: serverTimestamp(),
       dateTime: new Date().toISOString()
-    };
+   });
     
-    await addDoc(collection(db, 'orders'), orderData);
-    
-    // إرسال إشعار إيميل (EmailJS)
- try {
+    // ========== إرسال إشعار إيميل ==========
+    try {
       await emailjs.send("service_Wow1234", "template_j9liinu", {
         to_email: "alaa.aldubie@gmail.com",
         from_name: name,
