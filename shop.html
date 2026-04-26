@@ -382,6 +382,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+emailjs.init("P5RBYcjq1jHxCYEN0");
 
 let allProducts = [];
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -535,6 +536,21 @@ window.submitOrder = async function() {
   if (!address) { showToast('⚠️ الرجاء إدخال العنوان', 'error'); return; }
   const btn = document.getElementById('submitBtn');
   btn.disabled = true; btn.textContent = 'جاري...';
+  // إرسال إشعار إيميل
+try {
+    await emailjs.send("service_Wow1234", "template_j9liinu", {
+        to_email: "alaa.aldubie@gmail.com",
+        from_name: name,
+        customer_phone: phone,
+        customer_address: address,
+        order_total: total.toFixed(2),
+        order_products: cart.map(i => `${i.name} (×${i.qty})`).join(", "),
+        order_date: new Date().toLocaleString('ar-SA')
+    });
+    console.log("Email sent successfully");
+} catch(emailErr) {
+    console.log("Email error (non-critical):", emailErr);
+}
   try {
     const total = cart.reduce((s,x) => s + x.price * x.qty, 0);
     const orderNumber = 'ORD-' + Date.now().toString().slice(-8);
@@ -551,7 +567,6 @@ window.submitOrder = async function() {
   } catch(e) { showToast('❌ حدث خطأ', 'error'); }
   btn.disabled = false; btn.textContent = 'تأكيد الطلب ✓';
 };
-
 window.showToast = function(msg, type='success') {
   const c = document.getElementById('toastContainer');
   const t = document.createElement('div'); t.className=`toast ${type}`; t.textContent = msg;
