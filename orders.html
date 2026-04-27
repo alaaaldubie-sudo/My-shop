@@ -106,17 +106,6 @@
   .order-item-qty { font-size:0.85rem; color:var(--text-muted); }
   .order-item-price { font-size:0.95rem; font-weight:700; color:var(--accent2); }
 
-  .status-timeline { display:flex; gap:0; margin:20px 0; overflow-x:auto; padding-bottom:8px; }
-  .timeline-step { flex:1; min-width:80px; text-align:center; display:flex; flex-direction:column; align-items:center; }
-  .timeline-step::before { content:''; position:relative; top:18px; left:50%; width:100%; height:2px; background:rgba(255,255,255,0.1); z-index:0; }
-  .timeline-step:first-child::before { display:none; }
-  .step-dot { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.08); border:2px solid rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:0.9rem; position:relative; z-index:1; margin-bottom:8px; }
-  .step-label { font-size:0.75rem; color:var(--text-muted); font-weight:600; }
-  .timeline-step.done .step-dot { background:rgba(0,212,170,0.2); border-color:var(--success); }
-  .timeline-step.active .step-dot { background:rgba(233,69,96,0.2); border-color:var(--accent); box-shadow:0 0 12px rgba(233,69,96,0.3); }
-  .timeline-step.active .step-label { color:var(--accent); }
-  .timeline-step.done .step-label { color:var(--success); }
-
   footer { background:var(--secondary); border-top:1px solid rgba(255,255,255,0.06); padding:32px 24px; text-align:center; }
   .footer-brand { font-size:1.8rem; font-weight:900; color:var(--accent); margin-bottom:6px; }
   .footer-copy { color:var(--text-muted); font-size:0.8rem; }
@@ -181,7 +170,6 @@
   <div class="footer-copy">© 2024 متجري - جميع الحقوق محفوظة</div>
 </footer>
 
-<!-- واتساب عائم -->
 <a href="https://wa.me/966531609025?text=مرحباً%20أريد%20الاستفسار%20عن%20منتج" target="_blank" style="position: fixed; bottom: 20px; right: 20px; background: #25D366; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000; text-decoration: none;"><i class="fab fa-whatsapp"></i></a>
 
 <script type="module">
@@ -207,152 +195,48 @@ function showToast(msg, type = 'success') {
   setTimeout(() => t.remove(), 3000);
 }
 
-function formatPhone(input) { input.value = input.value.replace(/\D/g, ''); }
-
-async function searchOrders() {
+window.searchOrders = async function() {
   let phone = document.getElementById('phoneInput').value.trim();
   const btn = document.getElementById('searchBtn');
   if (!phone) { showToast('⚠️ الرجاء إدخال رقم الجوال', 'error'); return; }
   
   btn.disabled = true; btn.textContent = 'جاري البحث...';
-  
-  // Show loading
-  document.getElementById('resultsArea').innerHTML = `
-    <div class="state-container">
-      <div class="spinner"></div>
-      <div class="state-title">جاري البحث...</div>
-    </div>`;
+  document.getElementById('resultsArea').innerHTML = `<div class="state-container"><div class="spinner"></div><div class="state-title">جاري البحث...</div></div>`;
   
   try {
     let cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
     let ordersData = [];
-    
-    // Search with original phone
     let q = query(collection(db, 'orders'), where('customerPhone', '==', phone));
     let snap = await getDocs(q);
-    
     if (snap.empty && cleanPhone !== phone) {
       let q2 = query(collection(db, 'orders'), where('customerPhone', '==', cleanPhone));
       snap = await getDocs(q2);
     }
-    
     snap.forEach(doc => ordersData.push({ id: doc.id, ...doc.data() }));
     
     if (!ordersData.length) {
-      document.getElementById('resultsArea').innerHTML = `
-        <div class="state-container">
-          <div class="state-icon">🔍</div>
-          <div class="state-title">لا توجد طلبات</div>
-          <div class="state-msg">لا توجد طلبات مسجلة برقم ${phone}</div>
-          <button class="retry-btn" onclick="searchOrders()">إعادة المحاولة 🔄</button>
-        </div>`;
+      document.getElementById('resultsArea').innerHTML = `<div class="state-container"><div class="state-icon">🔍</div><div class="state-title">لا توجد طلبات</div><div class="state-msg">لا توجد طلبات مسجلة برقم ${phone}</div><button class="retry-btn" onclick="searchOrders()">إعادة المحاولة 🔄</button></div>`;
       return;
     }
-    
-    // Sort by date
-    ordersData.sort((a,b) => {
-      let da = a.createdAt?.seconds || 0, db = b.createdAt?.seconds || 0;
-      return db - da;
-    });
-    
+    ordersData.sort((a,b) => { let da = a.createdAt?.seconds || 0, db = b.createdAt?.seconds || 0; return db - da; });
     renderOrders(ordersData, phone);
   } catch(e) {
-    console.error(e);
-    document.getElementById('resultsArea').innerHTML = `
-      <div class="state-container">
-        <div class="state-icon">⚠️</div>
-        <div class="state-title">حدث خطأ</div>
-        <div class="state-msg">تعذر الاتصال بقاعدة البيانات، حاول مرة أخرى</div>
-        <button class="retry-btn" onclick="searchOrders()">إعادة المحاولة 🔄</button>
-      </div>`;
+    document.getElementById('resultsArea').innerHTML = `<div class="state-container"><div class="state-icon">⚠️</div><div class="state-title">حدث خطأ</div><div class="state-msg">تعذر الاتصال بقاعدة البيانات</div><button class="retry-btn" onclick="searchOrders()">إعادة المحاولة 🔄</button></div>`;
   }
   btn.disabled = false; btn.textContent = 'بحث 🔍';
-}
-
-function getStatusIndex(status) {
-  const statuses = ['جديد', 'قيد التجهيز', 'تم الشحن', 'مكتمل'];
-  return statuses.indexOf(status);
-}
-
-function renderTimeline(currentStatus) {
-  const steps = [
-    { key: 'جديد', icon: '🆕', label: 'جديد' },
-    { key: 'قيد التجهيز', icon: '⚙️', label: 'قيد التجهيز' },
-    { key: 'تم الشحن', icon: '🚚', label: 'تم الشحن' },
-    { key: 'مكتمل', icon: '✅', label: 'مكتمل' }
-  ];
-  const currentIdx = getStatusIndex(currentStatus);
-  if (currentIdx === -1) return '';
-  return `<div class="status-timeline">
-    ${steps.map((s, i) => {
-      const isDone = i < currentIdx;
-      const isActive = i === currentIdx;
-      return `<div class="timeline-step ${isDone?'done':''} ${isActive?'active':''}">
-        <div class="step-dot">${s.icon}</div>
-        <div class="step-label">${s.label}</div>
-      </div>`;
-    }).join('')}
-  </div>`;
-}
+};
 
 function renderOrders(orders, phone) {
-  const area = document.getElementById('resultsArea');
-  area.innerHTML = `
-    <div class="results-header">
-      <div class="results-title">📋 طلباتك</div>
-      <div class="results-count">${orders.length} طلب لرقم ${phone}</div>
-    </div>
-    <div class="orders-list" id="ordersList">
-      ${orders.map((o, idx) => renderOrderCard(o, idx)).join('')}
-    </div>`;
+  document.getElementById('resultsArea').innerHTML = `<div class="results-header"><div class="results-title">📋 طلباتك</div><div class="results-count">${orders.length} طلب لرقم ${phone}</div></div><div class="orders-list" id="ordersList">${orders.map((o, idx) => renderOrderCard(o, idx)).join('')}</div>`;
 }
 
 function renderOrderCard(o, idx) {
-  const date = o.createdAt?.seconds
-    ? new Date(o.createdAt.seconds * 1000).toLocaleString('ar-SA')
-    : o.dateTime ? new Date(o.dateTime).toLocaleString('ar-SA') : '—';
+  const date = o.createdAt?.seconds ? new Date(o.createdAt.seconds * 1000).toLocaleString('ar-SA') : o.dateTime ? new Date(o.dateTime).toLocaleString('ar-SA') : '—';
   const status = o.status || 'جديد';
   const total = parseFloat(o.total || o.totalPrice || 0).toFixed(2);
   const items = o.items || o.products || [];
-  
-  const itemsHTML = items.map(item => `
-    <div class="order-item-row">
-      <div><div class="order-item-name">${item.name}</div><div class="order-item-qty">الكمية: ${item.qty || item.quantity}</div></div>
-      <div class="order-item-price">${((item.price || 0) * (item.qty || item.quantity || 1)).toFixed(2)} ر.س</div>
-    </div>`).join('') || '<div style="color:var(--text-muted)">لا توجد تفاصيل</div>';
-
-  return `
-  <div class="order-card">
-    <div class="order-card-header" onclick="toggleOrder('order-${idx}')">
-      <div>
-        <div class="order-num">${o.orderNumber || '#' + o.id.slice(-8)}</div>
-        <div class="order-name">${o.customerName}</div>
-        <div class="order-date">📅 ${date}</div>
-      </div>
-      <div class="order-header-right">
-        <div class="order-total">${total} ر.س</div>
-        <span class="status-badge status-${status.replace(/\s/g,'-')}">${status}</span>
-        <div class="toggle-icon" id="toggle-icon-${idx}">▼</div>
-      </div>
-    </div>
-    <div class="order-details" id="order-${idx}">
-      <div class="order-details-inner">
-        ${renderTimeline(status)}
-        <div class="details-grid">
-          <div class="detail-item"><div class="detail-label">رقم الطلب</div><div class="detail-value">${o.orderNumber || o.id.slice(-8)}</div></div>
-          <div class="detail-item"><div class="detail-label">حالة الطلب</div><div class="detail-value"><span class="status-badge status-${status.replace(/\s/g,'-')}">${status}</span></div></div>
-          <div class="detail-item" style="grid-column:1/-1"><div class="detail-label">عنوان التوصيل</div><div class="detail-value">${o.customerAddress || '—'}</div></div>
-          ${o.notes ? `<div class="detail-item" style="grid-column:1/-1"><div class="detail-label">ملاحظات</div><div class="detail-value">${o.notes}</div></div>` : ''}
-        </div>
-        <div class="items-title">📦 المنتجات المطلوبة (${items.length} منتج)</div>
-        <div class="order-items-list">${itemsHTML}</div>
-        <div style="display:flex;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06)">
-          <span style="color:var(--text-muted)">إجمالي الطلب:</span>
-          <span style="font-size:1.3rem;font-weight:900;color:var(--accent2)">${total} ر.س</span>
-        </div>
-      </div>
-    </div>
-  </div>`;
+  const itemsHTML = items.map(item => `<div class="order-item-row"><div><div class="order-item-name">${item.name}</div><div class="order-item-qty">الكمية: ${item.qty || item.quantity}</div></div><div class="order-item-price">${((item.price || 0) * (item.qty || item.quantity || 1)).toFixed(2)} ر.س</div></div>`).join('') || '<div style="color:var(--text-muted)">لا توجد تفاصيل</div>';
+  return `<div class="order-card"><div class="order-card-header" onclick="toggleOrder('order-${idx}')"><div><div class="order-num">${o.orderNumber || '#' + o.id.slice(-8)}</div><div class="order-name">${o.customerName}</div><div class="order-date">📅 ${date}</div></div><div class="order-header-right"><div class="order-total">${total} ر.س</div><span class="status-badge status-${status.replace(/\s/g,'-')}">${status}</span><div class="toggle-icon" id="toggle-icon-${idx}">▼</div></div></div><div class="order-details" id="order-${idx}"><div class="order-details-inner"><div class="details-grid"><div class="detail-item"><div class="detail-label">رقم الطلب</div><div class="detail-value">${o.orderNumber || o.id.slice(-8)}</div></div><div class="detail-item"><div class="detail-label">حالة الطلب</div><div class="detail-value"><span class="status-badge status-${status.replace(/\s/g,'-')}">${status}</span></div></div><div class="detail-item" style="grid-column:1/-1"><div class="detail-label">عنوان التوصيل</div><div class="detail-value">${o.customerAddress || '—'}</div></div>${o.notes ? `<div class="detail-item" style="grid-column:1/-1"><div class="detail-label">ملاحظات</div><div class="detail-value">${o.notes}</div></div>` : ''}</div><div class="items-title">📦 المنتجات المطلوبة (${items.length} منتج)</div><div class="order-items-list">${itemsHTML}</div><div style="display:flex;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06)"><span style="color:var(--text-muted)">إجمالي الطلب:</span><span style="font-size:1.3rem;font-weight:900;color:var(--accent2)">${total} ر.س</span></div></div></div></div>`;
 }
 
 window.toggleOrder = function(id) {
@@ -364,11 +248,8 @@ window.toggleOrder = function(id) {
 
 window.toggleMenu = function() { document.getElementById('mobileMenu').classList.toggle('open'); };
 
-// Auto-fill from saved customer info
 const saved = JSON.parse(localStorage.getItem('customerInfo') || '{}');
 if (saved.phone) document.getElementById('phoneInput').value = saved.phone;
-
-window.searchOrders = searchOrders;
 </script>
 </body>
 </html>
