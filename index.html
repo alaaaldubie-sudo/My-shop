@@ -6,7 +6,6 @@
 <title>متجري | تسوق بأفضل الأسعار</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
-<!-- EmailJS SDK -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   :root {
@@ -32,7 +31,6 @@
     overflow-x: hidden;
   }
 
-  /* ===== NAVBAR ===== */
   nav {
     position: fixed; top: 0; width: 100%; z-index: 1000;
     background: rgba(26,26,46,0.95);
@@ -102,7 +100,6 @@
   }
   .mobile-menu a:hover { background: rgba(233,69,96,0.15); }
 
-  /* ===== HERO ===== */
   .hero {
     min-height: 100vh;
     display: flex; align-items: center; justify-content: center;
@@ -159,7 +156,6 @@
   }
   .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* ===== STATS ===== */
   .stats {
     display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
     margin-top: 60px; padding: 0 24px;
@@ -169,7 +165,6 @@
   .stat-num { font-size: 2rem; font-weight: 900; color: var(--accent); }
   .stat-label { font-size: 0.85rem; color: var(--text-muted); }
 
-  /* ===== SECTION ===== */
   section { padding: 80px 24px; max-width: 1300px; margin: 0 auto; }
   .section-header {
     display: flex; align-items: center; justify-content: space-between;
@@ -192,7 +187,6 @@
   }
   .view-all:hover { gap: 10px; }
 
-  /* ===== PRODUCTS GRID ===== */
   .products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -263,11 +257,8 @@
     display: flex; align-items: center; gap: 6px;
   }
   .add-to-cart-btn:hover { background: #c73652; transform: scale(1.05); }
-  .add-to-cart-btn.added {
-    background: var(--success);
-  }
+  .add-to-cart-btn.added { background: var(--success); }
 
-  /* ===== LOADING ===== */
   .loading-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -288,7 +279,6 @@
     0%, 100% { opacity: 1; } 50% { opacity: 0.6; }
   }
 
-  /* ===== FEATURES ===== */
   .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -306,7 +296,6 @@
   .feature-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
   .feature-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
 
-  /* ===== CART SIDEBAR ===== */
   .cart-overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.7);
@@ -390,7 +379,6 @@
   }
   .checkout-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(233,69,96,0.4); }
 
-  /* ===== ORDER MODAL ===== */
   .modal-overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.8);
@@ -457,7 +445,6 @@
   }
   .cancel-btn:hover { background: rgba(255,255,255,0.14); }
 
-  /* ===== TOAST ===== */
   .toast-container {
     position: fixed; bottom: 24px; left: 50%;
     transform: translateX(-50%); z-index: 5000;
@@ -481,7 +468,6 @@
   @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* ===== SUCCESS MODAL ===== */
   .success-modal {
     text-align: center; padding: 20px 0;
   }
@@ -495,7 +481,6 @@
     border-radius: 12px; display: inline-block;
   }
 
-  /* ===== FOOTER ===== */
   footer {
     background: var(--secondary);
     border-top: 1px solid rgba(255,255,255,0.06);
@@ -509,7 +494,6 @@
   .footer-links a:hover { color: var(--accent); }
   .footer-copy { color: var(--text-muted); font-size: 0.8rem; }
 
-  /* ===== RESPONSIVE ===== */
   @media (max-width: 768px) {
     .nav-links { display: none; }
     .hamburger { display: flex; }
@@ -523,7 +507,6 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav>
   <a href="index.html" class="nav-logo">🛍️ متجري</a>
   <ul class="nav-links">
@@ -543,7 +526,6 @@
   </div>
 </nav>
 
-<!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
   <a href="index.html" onclick="closeMenu()">🏠 الرئيسية</a>
   <a href="shop.html" onclick="closeMenu()">🛍️ المنتجات</a>
@@ -551,7 +533,6 @@
   <a href="admin.html" onclick="closeMenu()">🔐 لوحة التحكم</a>
 </div>
 
-<!-- HERO -->
 <div class="hero">
   <div class="hero-bg"></div>
   <div class="hero-content">
@@ -579,7 +560,6 @@
   </div>
 </div>
 
-<!-- FEATURED PRODUCTS -->
 <section>
   <div class="section-header">
     <div class="section-title">🔥 أحدث المنتجات</div>
@@ -593,33 +573,15 @@
   </div>
 </section>
 
-<!-- FEATURES -->
 <section style="padding-top:0">
   <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">🚀</div>
-      <div class="feature-title">شحن سريع</div>
-      <div class="feature-desc">توصيل خلال 3-5 أيام عمل لجميع المناطق</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔒</div>
-      <div class="feature-title">دفع آمن</div>
-      <div class="feature-desc">طرق دفع متعددة وآمنة 100%</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">💬</div>
-      <div class="feature-title">دعم 24/7</div>
-      <div class="feature-desc">فريق دعم على مدار الساعة لخدمتك</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">↩️</div>
-      <div class="feature-title">إرجاع مجاني</div>
-      <div class="feature-desc">سياسة إرجاع مرنة خلال 14 يوم</div>
-    </div>
+    <div class="feature-card"><div class="feature-icon">🚀</div><div class="feature-title">شحن سريع</div><div class="feature-desc">توصيل خلال 3-5 أيام عمل لجميع المناطق</div></div>
+    <div class="feature-card"><div class="feature-icon">🔒</div><div class="feature-title">دفع آمن</div><div class="feature-desc">طرق دفع متعددة وآمنة 100%</div></div>
+    <div class="feature-card"><div class="feature-icon">💬</div><div class="feature-title">دعم 24/7</div><div class="feature-desc">فريق دعم على مدار الساعة لخدمتك</div></div>
+    <div class="feature-card"><div class="feature-icon">↩️</div><div class="feature-title">إرجاع مجاني</div><div class="feature-desc">سياسة إرجاع مرنة خلال 14 يوم</div></div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-brand">🛍️ متجري</div>
   <div class="footer-tagline">تسوق بثقة واطمئنان</div>
@@ -631,7 +593,6 @@
   <div class="footer-copy">© 2024 متجري - جميع الحقوق محفوظة</div>
 </footer>
 
-<!-- CART OVERLAY + SIDEBAR -->
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
 <div class="cart-sidebar" id="cartSidebar">
   <div class="cart-header">
@@ -640,35 +601,19 @@
   </div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-footer" id="cartFooter" style="display:none">
-    <div class="cart-total">
-      <span>الإجمالي:</span>
-      <span id="cartTotal">0 ر.س</span>
-    </div>
+    <div class="cart-total"><span>الإجمالي:</span><span id="cartTotal">0 ر.س</span></div>
     <button class="checkout-btn" onclick="openCheckout()">إتمام الطلب 💳</button>
   </div>
 </div>
 
-<!-- ORDER MODAL -->
 <div class="modal-overlay" id="orderModal">
   <div class="modal">
     <div class="modal-title">📋 إتمام الطلب</div>
     <div class="order-summary" id="orderSummary"></div>
-    <div class="form-group">
-      <label class="form-label">الاسم الكامل *</label>
-      <input type="text" class="form-input" id="customerName" placeholder="أدخل اسمك الكامل">
-    </div>
-    <div class="form-group">
-      <label class="form-label">رقم الجوال *</label>
-      <input type="tel" class="form-input" id="customerPhone" placeholder="أدخل رقم جوالك (أي دولة)" dir="ltr">
-    </div>
-    <div class="form-group">
-      <label class="form-label">العنوان *</label>
-      <input type="text" class="form-input" id="customerAddress" placeholder="المدينة، الحي، الشارع">
-    </div>
-    <div class="form-group">
-      <label class="form-label">ملاحظات (اختياري)</label>
-      <input type="text" class="form-input" id="orderNotes" placeholder="أي ملاحظات إضافية...">
-    </div>
+    <div class="form-group"><label class="form-label">الاسم الكامل *</label><input type="text" class="form-input" id="customerName" placeholder="أدخل اسمك الكامل"></div>
+    <div class="form-group"><label class="form-label">رقم الجوال *</label><input type="tel" class="form-input" id="customerPhone" placeholder="أدخل رقم جوالك (أي دولة)" dir="ltr"></div>
+    <div class="form-group"><label class="form-label">العنوان *</label><input type="text" class="form-input" id="customerAddress" placeholder="المدينة، الحي، الشارع"></div>
+    <div class="form-group"><label class="form-label">ملاحظات (اختياري)</label><input type="text" class="form-input" id="orderNotes" placeholder="أي ملاحظات إضافية..."></div>
     <div class="modal-actions">
       <button class="submit-order-btn" onclick="submitOrder()" id="submitBtn">تأكيد الطلب ✓</button>
       <button class="cancel-btn" onclick="closeModal()">إلغاء</button>
@@ -676,7 +621,6 @@
   </div>
 </div>
 
-<!-- SUCCESS MODAL -->
 <div class="modal-overlay" id="successModal">
   <div class="modal">
     <div class="success-modal">
@@ -685,28 +629,19 @@
       <div class="success-msg">شكراً لك! رقم طلبك هو:</div>
       <div class="success-order-num" id="successOrderNum"></div>
       <div class="success-msg">احفظ هذا الرقم لتتبع طلبك من صفحة "طلباتي"</div>
-      <br>
-      <button class="submit-order-btn" onclick="closeSuccessModal()">حسناً 👍</button>
+      <br><button class="submit-order-btn" onclick="closeSuccessModal()">حسناً 👍</button>
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- واتساب عائم -->
-<a href="https://wa.me/966531609025?text=مرحباً%20أريد%20الاستفسار%20عن%20منتج" 
-   target="_blank" 
-   style="position: fixed; bottom: 20px; right: 20px; background: #25D366; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000; text-decoration: none;">
-    واتساب
-</a>
+<a href="https://wa.me/966531609025?text=مرحباً%20أريد%20الاستفسار%20عن%20منتج" target="_blank" style="position: fixed; bottom: 20px; right: 20px; background: #25D366; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000; text-decoration: none;"><i class="fab fa-whatsapp"></i></a>
 
-<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// Initialize EmailJS (استبدل بالمفاتيح الخاصة بك بعد التسجيل في emailjs.com)
 emailjs.init("P5RBYcjq1jHxCYEN0");
 
 const firebaseConfig = {
@@ -721,11 +656,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Cart state
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 let products = [];
 
-// Load saved customer info
 function loadSavedCustomer() {
   const saved = JSON.parse(localStorage.getItem('customerInfo') || '{}');
   if (saved.name) document.getElementById('customerName').value = saved.name;
@@ -734,7 +667,6 @@ function loadSavedCustomer() {
 }
 loadSavedCustomer();
 
-// Load featured products
 async function loadFeatured() {
   try {
     const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'), limit(8));
@@ -765,31 +697,21 @@ function renderFeatured(prods) {
   }
   grid.innerHTML = prods.map(p => {
     const imgs = Array.isArray(p.images) ? p.images : (p.image ? [p.image] : []);
-    const imgHTML = imgs[0]
-      ? `<img src="${imgs[0]}" alt="${p.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
-      : '';
-    return `
-    <div class="product-card" onclick="openProduct('${p.id}')">
-      <div class="product-img-wrap">
-        ${imgHTML}
-        <div class="no-img-placeholder" style="display:${imgs[0]?'none':'flex'}">📦</div>
-        <div class="product-badge">جديد</div>
-      </div>
+    const imgHTML = imgs[0] ? `<img src="${imgs[0]}" alt="${p.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : '';
+    return `<div class="product-card" onclick="openProduct('${p.id}')">
+      <div class="product-img-wrap">${imgHTML}<div class="no-img-placeholder" style="display:${imgs[0]?'none':'flex'}">📦</div><div class="product-badge">جديد</div></div>
       <div class="product-info">
         <div class="product-name">${p.name}</div>
         <div class="product-desc">${p.description || ''}</div>
         <div class="product-footer">
           <div class="product-price">${parseFloat(p.price).toFixed(2)} <span>ر.س</span></div>
-          <button class="add-to-cart-btn" onclick="event.stopPropagation();addToCart('${p.id}', this)">
-            + أضف
-          </button>
+          <button class="add-to-cart-btn" onclick="event.stopPropagation();addToCart('${p.id}', this)">+ أضف</button>
         </div>
       </div>
     </div>`;
   }).join('');
 }
 
-// Cart functions
 window.addToCart = function(id, btn) {
   const p = products.find(x => x.id === id);
   if (!p) return;
@@ -798,97 +720,54 @@ window.addToCart = function(id, btn) {
   else { cart.push({ id: p.id, name: p.name, price: parseFloat(p.price), qty: 1, image: (Array.isArray(p.images) ? p.images[0] : p.image) || '' }); }
   saveCart();
   updateCartUI();
-  if (btn) {
-    btn.textContent = '✓ تمت الإضافة';
-    btn.classList.add('added');
-    setTimeout(() => { btn.textContent = '+ أضف'; btn.classList.remove('added'); }, 1500);
-  }
+  if (btn) { btn.textContent = '✓ تمت الإضافة'; btn.classList.add('added'); setTimeout(() => { btn.textContent = '+ أضف'; btn.classList.remove('added'); }, 1500); }
   showToast('تم إضافة المنتج للسلة ✓', 'success');
 };
 
 function saveCart() { localStorage.setItem('cart', JSON.stringify(cart)); }
-
-function updateCartUI() {
-  const count = cart.reduce((s, x) => s + x.qty, 0);
-  document.getElementById('cartCount').textContent = count;
-  renderCartItems();
-}
+function updateCartUI() { document.getElementById('cartCount').textContent = cart.reduce((s, x) => s + x.qty, 0); renderCartItems(); }
 
 function renderCartItems() {
   const container = document.getElementById('cartItems');
   const footer = document.getElementById('cartFooter');
-  if (!cart.length) {
-    container.innerHTML = '<div class="cart-empty"><div class="empty-icon">🛒</div><div>سلتك فارغة</div></div>';
-    footer.style.display = 'none';
-    return;
-  }
+  if (!cart.length) { container.innerHTML = '<div class="cart-empty"><div class="empty-icon">🛒</div><div>سلتك فارغة</div></div>'; footer.style.display = 'none'; return; }
   footer.style.display = 'block';
   let total = 0;
   container.innerHTML = cart.map((item, i) => {
     total += item.price * item.qty;
-    return `
-    <div class="cart-item">
+    return `<div class="cart-item">
       ${item.image ? `<img class="cart-item-img" src="${item.image}" alt="${item.name}">` : `<div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;font-size:2rem">📦</div>`}
-      <div class="cart-item-info">
-        <div class="cart-item-name">${item.name}</div>
-        <div class="cart-item-price">${(item.price * item.qty).toFixed(2)} ر.س</div>
-        <div class="cart-item-qty">
-          <button class="qty-btn" onclick="changeQty(${i}, -1)">−</button>
-          <span class="qty-num">${item.qty}</span>
-          <button class="qty-btn" onclick="changeQty(${i}, 1)">+</button>
-        </div>
-      </div>
+      <div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">${(item.price * item.qty).toFixed(2)} ر.س</div>
+      <div class="cart-item-qty"><button class="qty-btn" onclick="changeQty(${i}, -1)">−</button><span class="qty-num">${item.qty}</span><button class="qty-btn" onclick="changeQty(${i}, 1)">+</button></div></div>
       <button class="remove-item" onclick="removeItem(${i})">🗑</button>
     </div>`;
   }).join('');
   document.getElementById('cartTotal').textContent = total.toFixed(2) + ' ر.س';
 }
 
-window.changeQty = function(i, delta) {
-  cart[i].qty = Math.max(1, cart[i].qty + delta);
-  saveCart(); updateCartUI();
-  showToast('تم تحديث الكمية', 'success');
-};
-window.removeItem = function(i) {
-  cart.splice(i, 1);
-  saveCart(); updateCartUI();
-  showToast('تم حذف المنتج من السلة', 'success');
-};
-window.openCart = function() {
-  document.getElementById('cartOverlay').classList.add('open');
-  document.getElementById('cartSidebar').classList.add('open');
-  updateCartUI();
-};
-window.closeCart = function() {
-  document.getElementById('cartOverlay').classList.remove('open');
-  document.getElementById('cartSidebar').classList.remove('open');
-};
+window.changeQty = function(i, delta) { cart[i].qty = Math.max(1, cart[i].qty + delta); saveCart(); updateCartUI(); };
+window.removeItem = function(i) { cart.splice(i, 1); saveCart(); updateCartUI(); };
+window.openCart = function() { document.getElementById('cartOverlay').classList.add('open'); document.getElementById('cartSidebar').classList.add('open'); updateCartUI(); };
+window.closeCart = function() { document.getElementById('cartOverlay').classList.remove('open'); document.getElementById('cartSidebar').classList.remove('open'); };
 window.openProduct = function(id) { window.location.href = 'shop.html?product=' + id; };
 
-// Checkout
 window.openCheckout = function() {
   if (!cart.length) { showToast('⚠️ السلة فارغة', 'error'); return; }
   const total = cart.reduce((s, x) => s + x.price * x.qty, 0);
-  document.getElementById('orderSummary').innerHTML = cart.map(x => `
-    <div class="order-summary-item">
-      <span>${x.name} × ${x.qty}</span>
-      <span>${(x.price * x.qty).toFixed(2)} ر.س</span>
-    </div>`).join('') +
-    `<div class="order-summary-total"><span>الإجمالي</span><span>${total.toFixed(2)} ر.س</span></div>`;
+  document.getElementById('orderSummary').innerHTML = cart.map(x => `<div class="order-summary-item"><span>${x.name} × ${x.qty}</span><span>${(x.price * x.qty).toFixed(2)} ر.س</span></div>`).join('') + `<div class="order-summary-total"><span>الإجمالي</span><span>${total.toFixed(2)} ر.س</span></div>`;
   document.getElementById('orderModal').classList.add('open');
   closeCart();
 };
 window.closeModal = function() { document.getElementById('orderModal').classList.remove('open'); };
 window.closeSuccessModal = function() { document.getElementById('successModal').classList.remove('open'); };
 
-// Submit order with Email notification
 window.submitOrder = async function() {
   if (cart.length === 0) { showToast('⚠️ السلة فارغة', 'error'); return; }
   
   const name = document.getElementById('customerName').value.trim();
   let phone = document.getElementById('customerPhone').value.trim();
   const address = document.getElementById('customerAddress').value.trim();
-  const notes = document.getElementById('orderNotes').value.trim();
+  const notes = document.getElementById('orderNotes')?.value.trim() || '';
   
   if (!name) { showToast('⚠️ الرجاء إدخال الاسم', 'error'); return; }
   if (!phone) { showToast('⚠️ الرجاء إدخال رقم الجوال', 'error'); return; }
@@ -901,7 +780,8 @@ window.submitOrder = async function() {
   try {
     const total = cart.reduce((s, x) => s + x.price * x.qty, 0);
     const orderNumber = 'ORD-' + Date.now().toString().slice(-8);
-    const orderData = {
+    
+    await addDoc(collection(db, 'orders'), {
       orderNumber: orderNumber,
       customerName: name,
       customerPhone: phone,
@@ -912,11 +792,9 @@ window.submitOrder = async function() {
       status: 'جديد',
       createdAt: serverTimestamp(),
       dateTime: new Date().toISOString()
-    };
-
-    await addDoc(collection(db, 'orders'), orderData);
+    });
     
-    // ========== إرسال إشعار إيميل ==========
+    // إرسال إشعار إيميل
     try {
       await emailjs.send("service_Wow1234", "template_j9liinu", {
         to_email: "alaa.aldubie@gmail.com",
@@ -932,14 +810,12 @@ window.submitOrder = async function() {
       console.log("Email error (non-critical):", emailErr);
     }
     
-    showToast('🎉 تم الطلب بنجاح! سيصلك تأكيد', 'success');
+    showToast('🎉 تم الطلب بنجاح! شكراً لك', 'success');
     document.getElementById('successOrderNum').textContent = orderNumber;
     document.getElementById('successModal').classList.add('open');
     
-    // حفظ بيانات العميل
     localStorage.setItem('customerInfo', JSON.stringify({ name, phone, address }));
     
-    // مسح السلة
     cart = [];
     saveCart();
     updateCartUI();
@@ -952,7 +828,6 @@ window.submitOrder = async function() {
   btn.textContent = 'تأكيد الطلب ✓';
 };
 
-// Toast
 window.showToast = function(msg, type = 'success') {
   const c = document.getElementById('toastContainer');
   const t = document.createElement('div');
@@ -962,14 +837,9 @@ window.showToast = function(msg, type = 'success') {
   setTimeout(() => t.remove(), 3200);
 };
 
-// Hamburger
-window.toggleMenu = function() {
-  const m = document.getElementById('mobileMenu');
-  m.classList.toggle('open');
-};
+window.toggleMenu = function() { document.getElementById('mobileMenu').classList.toggle('open'); };
 window.closeMenu = function() { document.getElementById('mobileMenu').classList.remove('open'); };
 
-// Init
 updateCartUI();
 loadFeatured();
 </script>
