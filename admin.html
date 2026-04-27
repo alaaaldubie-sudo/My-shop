@@ -193,9 +193,14 @@
             <div class="form-group"><label class="form-label">السعر (ر.س) *</label><input type="number" class="form-input" id="productPrice" placeholder="0.00" min="0" step="0.01"></div>
             <div class="form-group full"><label class="form-label">الوصف</label><textarea class="form-textarea" id="productDesc" placeholder="وصف المنتج..."></textarea></div>
             <div class="form-group full">
-              <label class="form-label">رابط صورة المنتج (اختياري)</label>
-              <input type="text" class="form-input" id="productImageUrl" placeholder="https://example.com/image.jpg">
-              <small style="color:var(--text-muted)">يمكنك استخدام رابط صورة من الإنترنت بدلاً من رفع ملف</small>
+              <label class="form-label">صور المنتج</label>
+              <div class="img-upload-area" id="uploadArea" onclick="document.getElementById('imgFileInput').click()" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+                <div class="upload-icon">📸</div>
+                <div class="upload-text">اضغط لاختيار صور أو اسحبها هنا</div>
+                <div class="upload-hint">PNG, JPG, WEBP — حتى 5 صور</div>
+              </div>
+              <input type="file" id="imgFileInput" accept="image/*" multiple style="display:none" onchange="handleImgFiles(this.files)">
+              <div class="img-preview-grid" id="imgPreviewGrid"></div>
             </div>
           </div>
           <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
@@ -262,6 +267,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBvAV5N1aneo4cgDxMVV5x4TL6bQsDalEc",
@@ -273,10 +279,12 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 let adminPassword = localStorage.getItem('adminPassword') || 'admin123';
 let allProducts = [];
 let allOrders = [];
+let newProductImgs = [];
 
 window.doLogin = function() {
   if (document.getElementById('passwordInput').value === adminPassword) {
@@ -345,25 +353,75 @@ async function loadProducts() {
 function renderProductsList() {
   const list = document.getElementById('productsList');
   if (!allProducts.length) { list.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:40px">لا توجد منتجات بعد</p>'; return; }
-  list.innerHTML = allProducts.map(p => `
-    <div class="product-row">
-      ${p.image ? `<img class="product-thumb" src="${p.image}" onerror="this.outerHTML='<div class=\"product-thumb\">📦</div>'">` : `<div class="product-thumb">📦</div>`}
+  list.innerHTML = allProducts.map(p => {
+    const imgSrc = (p.images && p.images[0]) ? p.images[0] : (p.image || '');
+    return `<div class="product-row">
+      ${imgSrc ? `<img class="product-thumb" src="${imgSrc}" onerror="this.outerHTML='<div class=\"product-thumb\">📦</div>'">` : `<div class="product-thumb">📦</div>`}
       <div class="product-row-info"><div class="product-row-name">${p.name}</div><div class="product-row-price">${parseFloat(p.price).toFixed(2)} ر.س</div><div class="product-row-desc">${p.description || ''}</div></div>
       <div class="product-row-actions"><button class="btn btn-warning btn-sm" onclick="deleteProduct('${p.id}')">🗑 حذف</button></div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   document.getElementById('productsCount').textContent = allProducts.length + ' منتج';
+}
+
+window.handleImgFiles = function(files) {
+  if (!files.length) return;
+  const preview = document.getElementById('imgPreviewGrid');
+  for (let file of files) {
+    if (!file.type.startsWith('image/')) { showToast('يرجى اختيار ملفات صور فقط', 'error'); continue; }
+    if (file.size > 5 * 1024 * 1024) { showToast('الصورة أكبر من 5MB', 'error'); continue; }
+    const url = URL.createObjectURL(file);
+    newProductImgs.push({ file, previewUrl: url });
+    const div = document.createElement('div');
+    div.className = 'img-preview-item';
+    div.innerHTML = `<img src="${url}"><button class="img-remove-btn" onclick="removeNewImg(${newProductImgs.length-1})">✕</button>`;
+    preview.appendChild(div);
+  }
+  document.getElementById('imgFileInput').value = '';
+};
+
+window.removeNewImg = function(i) {
+  newProductImgs.splice(i, 1);
+  renderNewImgPreviews();
+};
+
+function renderNewImgPreviews() {
+  const grid = document.getElementById('imgPreviewGrid');
+  grid.innerHTML = newProductImgs.map((img, i) => `<div class="img-preview-item"><img src="${img.previewUrl}"><button class="img-remove-btn" onclick="removeNewImg(${i})">✕</button></div>`).join('');
+}
+
+window.onDragOver = function(e) { e.preventDefault(); document.getElementById('uploadArea')?.classList.add('drag-over'); };
+window.onDrop = function(e) { e.preventDefault(); document.getElementById('uploadArea')?.classList.remove('drag-over'); if(e.dataTransfer.files) handleImgFiles(e.dataTransfer.files); };
+
+async function uploadImages(files) {
+  const urls = [];
+  for (const f of files) {
+    const storageRef = ref(storage, `products/${Date.now()}_${f.name}`);
+    const snap = await uploadBytes(storageRef, f);
+    const url = await getDownloadURL(snap.ref);
+    urls.push(url);
+  }
+  return urls;
 }
 
 window.addProduct = async function() {
   const name = document.getElementById('productName').value.trim();
   const price = document.getElementById('productPrice').value.trim();
   const desc = document.getElementById('productDesc').value.trim();
-  const imageUrl = document.getElementById('productImageUrl').value.trim();
   if (!name || !price) { showToast('الاسم والسعر مطلوبان', 'error'); return; }
   const btn = document.getElementById('addProductBtn');
   btn.disabled = true; btn.textContent = 'جاري الإضافة...';
   try {
-    await addDoc(collection(db, 'products'), { name, price: parseFloat(price), description: desc, image: imageUrl || '', createdAt: serverTimestamp() });
+    let imageUrls = [];
+    if (newProductImgs.length > 0) {
+      showToast('جاري رفع الصور...', 'warning');
+      imageUrls = await uploadImages(newProductImgs.map(x => x.file));
+    }
+    await addDoc(collection(db, 'products'), {
+      name, price: parseFloat(price), description: desc,
+      images: imageUrls, image: imageUrls[0] || '',
+      createdAt: serverTimestamp()
+    });
     showToast('تم إضافة المنتج بنجاح ✓', 'success');
     clearProductForm();
     loadProducts();
@@ -371,11 +429,13 @@ window.addProduct = async function() {
   } catch(e) { showToast('حدث خطأ: ' + e.message, 'error'); }
   btn.disabled = false; btn.textContent = '➕ إضافة المنتج';
 };
+
 window.clearProductForm = function() {
   document.getElementById('productName').value = '';
   document.getElementById('productPrice').value = '';
   document.getElementById('productDesc').value = '';
-  document.getElementById('productImageUrl').value = '';
+  newProductImgs = [];
+  renderNewImgPreviews();
 };
 
 window.deleteProduct = async (id) => {
